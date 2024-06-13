@@ -198,19 +198,29 @@ function ordenarPreguntas(tipoOrden) {
 
 function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
     // Filtrar las preguntas por tema y nivel
-    let preguntasFiltradas = preguntas.filter(pregunta => {
-        return pregunta.tema.nombre.toLowerCase() === temaSeleccionado && pregunta.nivel === nivelSeleccionado;
+    let preguntasFiltradas = preguntas.filter(pregunta => 
+        pregunta.tema.nombre.toLowerCase() === temaSeleccionado && pregunta.nivel === nivelSeleccionado
+    );
+
+    // Obtener una pregunta aleatoria de las preguntas filtradas
+    let preguntaAleatoria = preguntasFiltradas[Math.floor(Math.random() * preguntasFiltradas.length)];
+
+    // Mostrar el texto de la pregunta en el elemento HTML correspondiente
+    let textoPregunta = document.getElementById("textopregunta");
+    textoPregunta.textContent = preguntaAleatoria.texto;
+
+    // Limpiar las respuestas anteriores
+    let filaBotones = document.querySelector(".fila-botones");
+    filaBotones.innerHTML = "";
+
+    // Crear botones para cada respuesta
+    preguntaAleatoria.respuestasIncorrectas.push(preguntaAleatoria.respuestaCorrecta); // Agregar la respuesta correcta a las incorrectas
+    preguntaAleatoria.respuestasIncorrectas.sort(() => Math.random() - 0.5); // Mezclar las respuestas
+
+    preguntaAleatoria.respuestasIncorrectas.forEach((respuesta, index) => {
+        let botonRespuesta = document.createElement("button");
+        botonRespuesta.className = "botonrespuesta";
+        botonRespuesta.textContent = respuesta;
+        filaBotones.appendChild(botonRespuesta);
     });
-
-    // Si hay preguntas que coincidan con los criterios, elegir una al azar
-    if (preguntasFiltradas.length > 0) {
-        let indiceAleatorio = Math.floor(Math.random() * preguntasFiltradas.length);
-        let preguntaSeleccionada = preguntasFiltradas[indiceAleatorio];
-
-        // Mostrar la pregunta seleccionada en el HTML
-        let textoPregunta = document.getElementById("textopregunta");
-        textoPregunta.textContent = preguntaSeleccionada.texto;
-    } else {
-        alert("No hay preguntas disponibles para el tema y nivel seleccionados.");
-    }
 }
