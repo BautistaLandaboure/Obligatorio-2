@@ -1,0 +1,21 @@
+header{
+    background-color: gray;
+    width: 100%;
+}
+section{
+    width: 55%;
+    background-color: darkgrey;
+    float: left;
+    padding-left: 5%;
+}
+article{
+    background-color: orange;
+}
+aside{
+    width: 25%;
+    float: left;
+    padding: 5%;
+}
+table, td{
+    border: 1px solid black;
+}

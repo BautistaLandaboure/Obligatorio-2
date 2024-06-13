@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obligatorio Trivia</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script src="datosPrueba.js"></script>
+    <script src="clases.js"></script>
+    <script src="funciones1.js"></script>
+
+</head>
+<body>
+<header>
+    <img src="Imagenes/logo.jpeg" alt="logo trivia de la pagina" id="IDtrivia">
+</header>
+<nav>
+    <ul>
+        <li><a href="#descripciongeneral" id="linkDescripcion">Informaci&oacute;n General</a></li>
+        <li><a href="#gestion" id="linkGestion">Administrar</a></li>
+        <li><a href="#partejugar" id="linkJugar">¡Jugar!</a></li>
+    </ul>
+</nav>
+<main>
+    <!--Aca arranca descripcion-->
+    <section class="descripciongeneral" id="descripciongeneral">
+        <article>
+        <h2 class="margentitulo">DESCRIPCI&oacute;N GENERAL</h2>
+        <h3>&iquest; Qu&eacute; encontrar&aacute;s en este sitio &#63;</h3>
+        <p>En este sitio podr&aacute;s crear temas, preguntas y jugar a nuestra versi&oacute;n del conocido juego de Trivia.</p>
+        <p>Es una prueba de conocimientos generales con preguntas y respuestas.</p>
+        <p>Cada tema tiene un nombre y una descripci&oacute;n. Cada pregunta es de un tema, tiene un nivel (1- muy f&aacute;cil, ...., 5- muy dif&iacute;cil), un texto que la describe y te aparerecer&aacute;n varias respuestas, pero solo una es la correcta. Si la respondes bien, sumas 10 puntos, por cada error pierdes 1 punto, ¡pero puedes usar la ayuda!</p>
+        <p>El sitio fue desarrollado en el 1er. semestre 2024 - Programaci&oacute;n I - Universidad ORT Uruguay por:</p>
+        <table>
+            <tr>
+                <td><img src="Imagenes/fotopersonal.jpeg" alt="Imagen personal" id="IDfotopersonal"></td>
+                <td id="alinearabajo">Bautista Landaboure (316326) </td>
+            </tr>
+        </table>
+        </article>
+    </section>
+
+    <!--Aca arranca gestion-->
+    <section class="gestion" id="gestion">
+        <article>
+        <h2 class="margentitulo">Gesti&oacute;n de temas</h2>
+        <h3>Alta de temas</h3>
+        <form class="margenes" id="formAltaTemas" onsubmit="agregarTemas(event)"> 
+                <label for="IDnombre">Nombre</label>
+                <input type="text" id="IDnombre" class="nombre" name="nombre" required>
+                <label for="IDdescripcion">Descripción</label>
+                <input type="text" id="IDdescripcion" class="nombre" name="descripcion" required>
+                <button type="button"  id="botonAgregarTema">Agregar</button>
+        </form>
+        <h3>Datos generales de temas</h3>
+        <p id="total-temas">Lista de temas (total de temas: 0)</p>
+        <ul id="lista-temas">
+            <li>Sin Datos</li>
+        </ul>
+        <p id="promedio">Promedio de preguntas por tema (cantidad total de preguntas/cantidad total de temas): sin datos</p>
+        <p>Temas sin preguntas:</p>
+        <ul>
+            <li>Sin Datos</li>
+        </ul>
+        <h2 class="margentitulo">Gesti&oacute;n de preguntas</h2>
+        <h3>Alta de preguntas</h3>
+        <form class="margenes" id="formAltaPregunta">
+            <label for="IDtema">Tema</label>
+            <select id="IDtema" name="tema" required>
+                <!-- Opciones de temas se agregan dinámicamente desde JavaScript -->
+            </select>
+            <label for="IDnivel">Nivel</label>
+            <input type="number" id="IDnivel" name="nivel" min="1" max="5" required>
+            <br>
+            <label for="IDtextopregunta">Texto de la pregunta</label>
+            <input type="text" id="IDtextopregunta" class="respuestas" name="textopregunta" required>
+            <label for="IDrespcorrecta">Respuesta Correcta</label>
+            <input type="text" id="IDrespcorrecta" class="respuestas" name="respcorrecta" required>
+            <label for="IDrespincorrecta">Respuestas Incorrectas </label>
+            <input type="text" id="IDrespincorrecta" class="respuestas" name="respincorrecta" required>
+            <input type="submit" value="Agregar">
+        </form>
+        
+        <br>
+        <h3>Datos generales de preguntas</h3>
+        <p id="contador-preguntas">Total de preguntas registradas: 0 preguntas</p>
+        <p>M&aacute;ximo puntaje obtenido por un jugador: sin datos</p>
+        <span>Preguntas registradas:</span>
+        <input type="radio" id="IDopcioncreciente" name="orden" value="creciente">
+        <label for="IDopcioncreciente">Orden nombre tema creciente/nivel creciente</label>
+        <input type="radio" id="IDopciondecreciente" name="orden" value="decreciente">
+        <label for="IDopciondecreciente">Orden nombre tema decreciente/nivel decreciente</label>        
+        <div class="table-container">
+            <table class="tabla2">
+                <thead class="tabla2">
+                    <tr class="tabla2th">
+                        <th class="tabla2th">Nombre del tema</th>
+                        <th class="tabla2th">Nivel</th>
+                        <th class="tabla2th">Texto de la pregunta</th>
+                        <th class="tabla2th">Respuesta correcta</th>
+                        <th class="tabla2th">Respuestas incorrectas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </article>
+    </section>
+
+    <!-- Aca arranca a Jugar -->
+    <article>
+    <section class="partejugar" id="partejugarmostrable">
+        <h2 class="margentitulo">¡A JUGAR!</h2>
+        <h3>Configuración</h3>
+        <form id="configuracion-juego">
+            <label for="IDtemaElegir">Tema a Elegir</label>
+            <select id="IDtemaElegir" name="tema" required>
+            </select>
+            <label for="IDnivelJuego">Nivel de Juego</label>
+            <input type="number" id="IDnivelJuego" min="1" max="5" required>
+            <button type="submit" id="botonaJugar"> Jugar </button>
+        </form>
+    </section>
+        <section id="partejugarnomostrar">
+        <h3>Juego</h3>
+        <p>Puntaje acumulado en esta Partida: 0</p>
+        <p>La pregunta es....:</p>
+        <p class="textojugar" id="textopregunta">TEXTO DE LA PREGUNTA</p>
+        <div class="contenedor-botones">
+            <div class="fila-botones">
+                <button class="botonrespuesta">Respuesta 1</button>
+                <button class="botonrespuesta">Respuesta 2</button>
+                <button class="botonrespuesta">Respuesta 3</button>
+                <button class="botonrespuesta">Respuesta 4</button>
+            </div>
+            <div class="fila-botones">
+                <button type="submit">Ayuda</button>
+                <button type="submit">Siguiente Pregunta</button>
+                <button type="submit">Terminar</button>
+            </div>
+        </div> 
+    </article>
+    </section>
+</main>
+</body>
+</html>

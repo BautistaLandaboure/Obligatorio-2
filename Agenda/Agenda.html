@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Contactos</title>
+    <link rel="stylesheet" href="Agenda.css">
+    <script src="Agendaclases.js"></script>
+    <script src="Agendafunciones.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Contactos</h1>
+    </header>
+    <section>
+        <h2>Ingreso de datos</h2>
+        <article>
+            <form id="IdFormulario" action="#" method="post">
+                <label for="IdNombre">Nombre:</label>
+                <input type="text" id="IdNombre" required>
+                <br>
+                <label for="IdApellido">Apellido:</label>
+                <input type="text" id="IdApellido" required>
+                <br>
+                <label for="IdEdad">Edad:</label>
+                <input type="number" id="IdEdad" required>
+                <br>
+                <label for="IdTelefono">Teléfono:</label>
+                <input type="text" id="IdTelefono" required>
+                <br>
+                <input type="button" id="IdBotonAgregar" value="Agregar">
+                <br>
+                <input type="button" id="IdBotonJovenes" value="Consultar">
+                <br>
+                <label for="IDcombo">Contactos</label>
+                <select id="IDcombo"></select>
+                <input type="button" id="IDbotoneliminar" value="Eliminar">
+            </form>
+        </article>
+        <article>
+            <h1>Tabla</h1>
+            <table id="IdTablaJovenes">
+            </table>
+        </article>
+    </section>
+    <aside>
+        <h4>Contactos Ingresados</h4>
+        <ul id="IdLista"></ul>
+    </aside>
+</body>
+</html>

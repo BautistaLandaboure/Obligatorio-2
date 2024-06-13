@@ -1,0 +1,199 @@
+/* Creado por Bautista Landaboure (316326) */
+header {
+    background-color: salmon;
+    text-align: center;
+}
+
+nav {
+    background-color: salmon;
+    align-items: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav li {
+    margin: 10px;
+}
+
+.descripciongeneral {
+    background-color: gainsboro;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.gestion {
+    background-color: orange;
+}
+
+.nombre {
+    margin-left: 100px;
+}
+
+.partejugar {
+    background-color: pink;
+    padding: 20px; /* Ajusta el padding según tu diseño */
+    margin: 0; /* Asegúrate de que no haya margen */
+}
+
+#partejugarnomostrar {
+    background-color: pink;
+    padding: 20px; /* Ajusta el padding según tu diseño */
+    margin: 0; /* Asegúrate de que no haya margen */
+}
+
+.respuestas {
+    margin-left: 50px;
+}
+
+.textojugar {
+    text-align: center;
+    border-style: solid;
+    border-color: white;
+    background-color: rgb(218, 121, 12);
+    color: white;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.contenedor-botones {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.fila-botones {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.botonrespuesta {
+    text-align: center;
+    border-style: solid;
+    border-color: white;
+    background-color: rgb(218, 121, 12);
+    color: white;
+    padding: 10px 20px;
+}
+
+.tabla2 {
+    width: 100%;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid #000;
+}
+
+.tabla2 thead {
+    background-color: lightgray;
+}
+
+.tabla2 th, .tabla2 td {
+    padding: 12px 15px;
+    border: 1px solid #000;
+    text-align: center;
+}
+
+.table-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    max-height: 360px; /* Ajuste para mostrar alrededor de 6 preguntas */
+    overflow-y: auto;
+    border: 1px solid #ccc; /* Agrega un borde para diferenciar el área de la tabla */
+}
+
+.table-container table {
+    width: 100%; /* Asegura que la tabla ocupe todo el ancho del contenedor */
+    border-collapse: collapse;
+}
+
+.table-container th, .table-container td {
+    border: 1px solid #ddd; /* Añade bordes a las celdas para mejor visualización */
+    padding: 8px; /* Espaciado dentro de las celdas */
+    text-align: left; /* Alineación del texto en las celdas */
+}
+
+.table-container th {
+    background-color: #f2f2f2; /* Fondo para los encabezados */
+    position: sticky; /* Mantiene los encabezados visibles al hacer scroll */
+    top: 0; /* Necesario para el sticky */
+}
+
+h3 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.margentitulo {
+    padding: 20px 40px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#alinearabajo {
+    vertical-align: bottom;
+    padding-top: 50px;
+}
+
+#IDtemaElegir {
+    margin-left: 50px;
+    width: 15%;
+}
+
+#IDtrivia {
+    width: 300px;
+    height: 100px;
+}
+
+#IDfotopersonal {
+    width: 300px;
+    height: 300px;
+}
+
+#IDtema {
+    margin-left: 145px;
+    width: 150px;
+}
+
+#IDnivel {
+    margin-left: 135px;
+}
+
+#IDjuego {
+    margin-right: 100px;
+}
+.tema-geografia {
+    background-color: yellow; 
+}
+.tema-historia {
+    background-color: #FF8C00; 
+}
+.tema-matematicas{
+    background-color: green; 
+}
+.tema-deporte{
+    background-color: greenyellow; 
+}
+.tema-ciencia{
+    background-color: lightskyblue; 
+}
+.tema-arte{
+    background-color: olive; 
+}
+.tema-lenguaje{
+    background-color: gold; 
+}
