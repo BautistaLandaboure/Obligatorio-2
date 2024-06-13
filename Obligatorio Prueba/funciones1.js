@@ -169,33 +169,48 @@ function ordenarPreguntas(tipoOrden) {
     agregarDatos(preguntasOrdenadas);
   }
 
-function Jugar(){
+  function Jugar(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
 
-    let tema = document.getElementById("IDtemaElegir");
-    let nivel = document.getElementById("IDnivelJuego");
+    let temaSeleccionado = document.getElementById("IDtemaElegir").value;
+    let nivelSeleccionado = parseInt(document.getElementById("IDnivelJuego").value);
 
-    tema.disabled = true; 
-    nivel.disabled = true; 
-    nivel.readOnly = true; 
+    if (temaSeleccionado && nivelSeleccionado) {
+        temaSeleccionado = temaSeleccionado.toLowerCase();
+        mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado);
+        
+        let tema = document.getElementById("IDtemaElegir");
+        let nivel = document.getElementById("IDnivelJuego");
 
-    document.getElementById("descripciongeneral").style.display = "none";
-    document.getElementById("gestion").style.display = "none";
-    document.getElementById("partejugarmostrable").style.display = "block";
-    document.getElementById("partejugarnomostrar").style.display = "block";
+        tema.disabled = true;
+        nivel.disabled = true;
+        nivel.readOnly = true;
 
-    mostrarPreguntaAleatoria();
+        document.getElementById("descripciongeneral").style.display = "none";
+        document.getElementById("gestion").style.display = "none";
+        document.getElementById("partejugarmostrable").style.display = "block";
+        document.getElementById("partejugarnomostrar").style.display = "block";
+    } else {
+        alert("Por favor seleccione un tema y un nivel antes de jugar.");
+    }
 }
 
-function mostrarPreguntaAleatoria() {
-    let indiceAleatorio = Math.floor(Math.random() * preguntas.length);
-    let preguntaAleatoria = preguntas[indiceAleatorio];
 
-    let textoPregunta = document.getElementById("textopregunta");
-    textoPregunta.textContent = preguntaAleatoria.texto;
+function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
+    // Filtrar las preguntas por tema y nivel
+    let preguntasFiltradas = preguntas.filter(pregunta => {
+        return pregunta.tema.nombre.toLowerCase() === temaSeleccionado && pregunta.nivel === nivelSeleccionado;
+    });
+
+    // Si hay preguntas que coincidan con los criterios, elegir una al azar
+    if (preguntasFiltradas.length > 0) {
+        let indiceAleatorio = Math.floor(Math.random() * preguntasFiltradas.length);
+        let preguntaSeleccionada = preguntasFiltradas[indiceAleatorio];
+
+        // Mostrar la pregunta seleccionada en el HTML
+        let textoPregunta = document.getElementById("textopregunta");
+        textoPregunta.textContent = preguntaSeleccionada.texto;
+    } else {
+        alert("No hay preguntas disponibles para el tema y nivel seleccionados.");
+    }
 }
-
-
-
-
-alert ("Alert");
