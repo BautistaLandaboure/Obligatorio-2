@@ -198,4 +198,4 @@ function mostrarPreguntaAleatoria() {
 
 
 
-
+alert ("Alert");
