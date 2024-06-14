@@ -9,6 +9,7 @@ function inicio() {
     document.getElementById("linkGestion").addEventListener("click", mostrarGestion);
     document.getElementById("linkJugar").addEventListener("click", mostrarJugar);
     document.getElementById("botonaJugar").addEventListener("click", Jugar); 
+    document.getElementById("botonAyuda").addEventListener("click", mostrarAyuda);
     document.getElementById("IDopcioncreciente").addEventListener("click", function() {
         ordenarPreguntas("creciente");
     });
@@ -45,6 +46,8 @@ function mostrarJugar() {
     document.getElementById("partejugarmostrable").style.display = "block";
     document.getElementById("partejugarnomostrar").style.display = "none";
 }
+// Objeto para almacenar colores por tema
+let coloresPorTema = {};
 
 function agregarDatos(preguntas) {
     let tbody = document.querySelector(".tabla2 tbody");
@@ -57,12 +60,19 @@ function agregarDatos(preguntas) {
 
         if (!temasRegistrados.includes(pregunta.tema.nombre)) {
             temasRegistrados.push(pregunta.tema.nombre);
+
+            // Asignar un color aleatorio único al tema si no está registrado
+            if (!coloresPorTema[pregunta.tema.nombre.toLowerCase()]) {
+                coloresPorTema[pregunta.tema.nombre.toLowerCase()] = generarColorAleatorio();
+            }
         }
 
         let tr = document.createElement("tr");
 
-      
+        // Asignar clase de tema y color según el tema
+        let colorTema = coloresPorTema[pregunta.tema.nombre.toLowerCase()];
         tr.classList.add(`tema-${pregunta.tema.nombre.toLowerCase()}`);
+        tr.style.backgroundColor = colorTema;
 
         let tdTema = document.createElement("td");
         tdTema.innerHTML = pregunta.tema.nombre;
@@ -92,6 +102,8 @@ function agregarDatos(preguntas) {
     actualizarListaTemas();
     actualizarSelectTemas();
 }
+
+
 
 function limpiarTabla() {
     let tbody = document.querySelector(".tabla2 tbody");
@@ -190,11 +202,20 @@ function ordenarPreguntas(tipoOrden) {
         document.getElementById("gestion").style.display = "none";
         document.getElementById("partejugarmostrable").style.display = "block";
         document.getElementById("partejugarnomostrar").style.display = "block";
+
+        // Obtener el color del tema seleccionado
+        let colorTema = coloresPorTema[temaSeleccionado];
+
+        // Aplicar el color del tema a la pregunta y respuestas
+        let textopregunta = document.getElementById("textopregunta");
+        textopregunta.style.backgroundColor = colorTema;
+
+        let filaBotones = document.querySelector(".fila-botones");
+        filaBotones.style.backgroundColor = colorTema;
     } else {
         alert("Por favor seleccione un tema y un nivel antes de jugar.");
     }
 }
-
 
 function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
     // Filtrar las preguntas por tema y nivel
@@ -221,6 +242,86 @@ function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
         let botonRespuesta = document.createElement("button");
         botonRespuesta.className = "botonrespuesta";
         botonRespuesta.textContent = respuesta;
+
+        // Aplicar el color del tema a las respuestas
+        botonRespuesta.style.backgroundColor = coloresPorTema[temaSeleccionado];
+
         filaBotones.appendChild(botonRespuesta);
     });
+}
+
+function mostrarAyuda() {
+    let respuestaCorrecta = obtenerRespuestaCorrecta();
+
+    // Mostrar la primera letra o número de la respuesta correcta
+    let primeraLetra = respuestaCorrecta.charAt(0);
+    alert(`La primera letra o número de la respuesta correcta es: ${primeraLetra}`);
+}
+
+function obtenerRespuestaCorrecta() {
+    // Obtener el texto de la respuesta correcta de la pregunta mostrada
+    let textoRespuestaCorrecta = "";
+
+    // Buscar la fila de la tabla donde se muestra la pregunta actual
+    let tabla = document.querySelector(".tabla2");
+    if (tabla) {
+        let filas = tabla.querySelectorAll("tbody tr");
+        filas.forEach((fila) => {
+            if (fila.style.display !== "none") {
+                let tdRespuestaCorrecta = fila.querySelector("td:nth-child(4)"); // Cambia el índice según la estructura de tu tabla
+                if (tdRespuestaCorrecta) {
+                    textoRespuestaCorrecta = tdRespuestaCorrecta.textContent.trim();
+                }
+            }
+        });
+    }
+
+    return textoRespuestaCorrecta;
+}
+
+function generarColorAleatorio() {
+    let r = Math.floor(Math.random() * 256);
+    let g = Math.floor(Math.random() * 256);
+    let b = Math.floor(Math.random() * 256);
+
+    // Convertir a color hexadecimal
+    let colorHex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+
+    // Verificar brillo y ajustar si es necesario
+    // Convertir a HSL para evaluar el brillo
+    let hsl = rgbToHsl(r, g, b);
+    
+    // Si el color es más claro que el amarillo, lo oscurecemos
+    if (hsl[2] > 0.9) {
+        return "#FFFF66"; // Amarillo claro
+    }
+
+    // Si el color es más oscuro que el marrón, lo aclaramos
+    if (hsl[2] < 0.1) {
+        return "#663300"; // Marrón oscuro
+    }
+
+    return colorHex;
+}
+
+function rgbToHsl(r, g, b) {
+    r /= 255, g /= 255, b /= 255;
+  
+    let max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+  
+    if (max == min) {
+      h = s = 0; // achromatic
+    } else {
+      let d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+  
+    return [h, s, l];
 }
