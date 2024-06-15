@@ -206,10 +206,11 @@ function ordenarPreguntas(tipoOrden) {
         // Obtener el color del tema seleccionado
         let colorTema = coloresPorTema[temaSeleccionado];
 
-        // Aplicar el color del tema a la pregunta y respuestas
+        // Aplicar el color del tema a la pregunta
         let textopregunta = document.getElementById("textopregunta");
         textopregunta.style.backgroundColor = colorTema;
 
+        // Aplicar el color del tema a las respuestas
         let filaBotones = document.querySelector(".fila-botones");
         filaBotones.style.backgroundColor = colorTema;
     } else {
@@ -246,8 +247,26 @@ function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
         // Aplicar el color del tema a las respuestas
         botonRespuesta.style.backgroundColor = coloresPorTema[temaSeleccionado];
 
+        // Agregar evento de click a cada botón de respuesta
+        botonRespuesta.addEventListener("click", () => manejarRespuesta(botonRespuesta, respuesta, preguntaAleatoria.respuestaCorrecta));
+
         filaBotones.appendChild(botonRespuesta);
     });
+}
+
+function manejarRespuesta(boton, respuestaSeleccionada, respuestaCorrecta) {
+    if (respuestaSeleccionada === respuestaCorrecta) {
+        boton.style.backgroundColor = "green";
+
+        // Deshabilitar todos los botones después de seleccionar una respuesta correcta
+        let botonesRespuestas = document.querySelectorAll(".botonrespuesta");
+        botonesRespuestas.forEach((boton) => {
+            boton.disabled = true;
+        });
+    } else {
+        boton.style.backgroundColor = "red";
+        boton.disabled = true; // Deshabilitar solo el botón de respuesta incorrecta seleccionado
+    }
 }
 
 function mostrarAyuda() {
