@@ -1,7 +1,5 @@
-
-
 // Función que se ejecuta al cargar la página
-window.addEventListener("load", inicio,);
+window.addEventListener("load", inicio);
 
 function inicio() {
     mostrarDescripcion();
@@ -16,14 +14,12 @@ function inicio() {
     document.getElementById("IDopciondecreciente").addEventListener("click", function() {
         ordenarPreguntas("decreciente");
     });
+    document.getElementById("botonSiguientePregunta").addEventListener("click", cambiarPregunta);
 
-   
     let deseaCargarDatos = confirm("¿Desea que hayan datos cargados?");
     if (deseaCargarDatos) {
         agregarDatos(preguntas);
     }
-
-   
 }
 
 function mostrarDescripcion() {
@@ -46,6 +42,7 @@ function mostrarJugar() {
     document.getElementById("partejugarmostrable").style.display = "block";
     document.getElementById("partejugarnomostrar").style.display = "none";
 }
+
 // Objeto para almacenar colores por tema
 let coloresPorTema = {};
 
@@ -102,8 +99,6 @@ function agregarDatos(preguntas) {
     actualizarListaTemas();
     actualizarSelectTemas();
 }
-
-
 
 function limpiarTabla() {
     let tbody = document.querySelector(".tabla2 tbody");
@@ -179,9 +174,12 @@ function ordenarPreguntas(tipoOrden) {
     }
   
     agregarDatos(preguntasOrdenadas);
-  }
+}
 
-  function Jugar(event) {
+// Array para almacenar las preguntas mostradas
+let preguntasMostradas = [];
+
+function Jugar(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
 
     let temaSeleccionado = document.getElementById("IDtemaElegir").value;
@@ -224,12 +222,25 @@ function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
         pregunta.tema.nombre.toLowerCase() === temaSeleccionado && pregunta.nivel === nivelSeleccionado
     );
 
-    // Obtener una pregunta aleatoria de las preguntas filtradas
-    let preguntaAleatoria = preguntasFiltradas[Math.floor(Math.random() * preguntasFiltradas.length)];
+    // Filtrar las preguntas que ya se han mostrado
+    let preguntasDisponibles = preguntasFiltradas.filter(pregunta => 
+        !preguntasMostradas.includes(pregunta.texto)
+    );
 
-    // Mostrar el texto de la pregunta en el elemento HTML correspondiente
-    let textoPregunta = document.getElementById("textopregunta");
-    textoPregunta.textContent = preguntaAleatoria.texto;
+    if (preguntasDisponibles.length === 0) {
+        alert("No hay más preguntas disponibles para este tema y nivel.");
+        return;
+    }
+
+    // Obtener una pregunta aleatoria de las disponibles
+    let preguntaAleatoria = preguntasDisponibles[Math.floor(Math.random() * preguntasDisponibles.length)];
+
+    // Agregar la pregunta mostrada al array de preguntas mostradas
+    preguntasMostradas.push(preguntaAleatoria.texto);
+
+    // Mostrar la pregunta
+    let preguntaElement = document.getElementById("textopregunta");
+    preguntaElement.textContent = preguntaAleatoria.texto;
 
     // Limpiar las respuestas anteriores
     let filaBotones = document.querySelector(".fila-botones");
@@ -343,4 +354,14 @@ function rgbToHsl(r, g, b) {
     }
   
     return [h, s, l];
+}
+
+function cambiarPregunta() {
+    let temaSeleccionado = document.getElementById("IDtemaElegir").value;
+    let nivelSeleccionado = parseInt(document.getElementById("IDnivelJuego").value);
+
+    if (temaSeleccionado && nivelSeleccionado) {
+        temaSeleccionado = temaSeleccionado.toLowerCase();
+        mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado);
+    }
 }
