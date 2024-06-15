@@ -15,11 +15,18 @@ function inicio() {
         ordenarPreguntas("decreciente");
     });
     document.getElementById("botonSiguientePregunta").addEventListener("click", cambiarPregunta);
+    document.getElementById("botonTerminar").addEventListener("click", terminarJuego);
+
+    // Verificar si se accede a otras pestañas
+    window.addEventListener("blur", terminarJuego);
 
     let deseaCargarDatos = confirm("¿Desea que hayan datos cargados?");
     if (deseaCargarDatos) {
         agregarDatos(preguntas);
     }
+
+    // Inicializar el puntaje
+    actualizarPuntaje(0);
 }
 
 function mostrarDescripcion() {
@@ -179,6 +186,9 @@ function ordenarPreguntas(tipoOrden) {
 // Array para almacenar las preguntas mostradas
 let preguntasMostradas = [];
 
+// Variable para mantener el puntaje
+let puntaje = 0;
+
 function Jugar(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
 
@@ -227,12 +237,13 @@ function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
         !preguntasMostradas.includes(pregunta.texto)
     );
 
+    // Verificar si hay preguntas disponibles
     if (preguntasDisponibles.length === 0) {
         alert("No hay más preguntas disponibles para este tema y nivel.");
         return;
     }
 
-    // Obtener una pregunta aleatoria de las disponibles
+    // Seleccionar una pregunta aleatoria de las disponibles
     let preguntaAleatoria = preguntasDisponibles[Math.floor(Math.random() * preguntasDisponibles.length)];
 
     // Agregar la pregunta mostrada al array de preguntas mostradas
@@ -274,9 +285,15 @@ function manejarRespuesta(boton, respuestaSeleccionada, respuestaCorrecta) {
         botonesRespuestas.forEach((boton) => {
             boton.disabled = true;
         });
+
+        // Sumar puntos por respuesta correcta
+        actualizarPuntaje(10);
     } else {
         boton.style.backgroundColor = "red";
         boton.disabled = true; // Deshabilitar solo el botón de respuesta incorrecta seleccionado
+
+        // Restar puntos por respuesta incorrecta
+        actualizarPuntaje(-1);
     }
 }
 
@@ -364,4 +381,21 @@ function cambiarPregunta() {
         temaSeleccionado = temaSeleccionado.toLowerCase();
         mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado);
     }
+}
+
+function actualizarPuntaje(puntos) {
+    puntaje += puntos;
+
+    // Actualizar el puntaje en el elemento HTML correspondiente
+    let puntajeElement = document.getElementById("puntaje");
+    puntajeElement.textContent = `Puntaje acumulado en esta Partida: ${puntaje}`;
+}
+
+function terminarJuego() {
+    // Mostrar puntaje en una ventana emergente
+    alert(`Puntaje acumulado en esta partida: ${puntaje}`);
+
+    // Restablecer el juego
+    puntaje = 0;
+    document.getElementById("puntaje").textContent = `Puntaje acumulado en esta Partida: ${puntaje}`;
 }
