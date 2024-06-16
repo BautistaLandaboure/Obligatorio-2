@@ -1,11 +1,23 @@
 // Función que se ejecuta al cargar la página
 window.addEventListener("load", inicio);
+// Variable para indicar si un juego está en curso
+let juegoEnCurso = false;
+let puntajeMaximo = 0;
 
 function inicio() {
     mostrarDescripcion();
-    document.getElementById("linkDescripcion").addEventListener("click", mostrarDescripcion);
-    document.getElementById("linkGestion").addEventListener("click", mostrarGestion);
-    document.getElementById("linkJugar").addEventListener("click", mostrarJugar);
+    document.getElementById("linkDescripcion").addEventListener("click", function() {
+        terminarJuegoSiEstaEnCurso();
+        mostrarDescripcion();
+    });
+    document.getElementById("linkGestion").addEventListener("click", function() {
+        terminarJuegoSiEstaEnCurso();
+        mostrarGestion();
+    });
+    document.getElementById("linkJugar").addEventListener("click", function() {
+        terminarJuegoSiEstaEnCurso();
+        mostrarJugar();
+    });
     document.getElementById("botonaJugar").addEventListener("click", Jugar); 
     document.getElementById("botonAyuda").addEventListener("click", mostrarAyuda);
     document.getElementById("IDopcioncreciente").addEventListener("click", function() {
@@ -30,6 +42,7 @@ function mostrarDescripcion() {
     document.getElementById("gestion").style.display = "none";
     document.getElementById("partejugarmostrable").style.display = "none";
     document.getElementById("partejugarnomostrar").style.display = "none";
+    desbloquearSelectores()
 }
 
 function mostrarGestion() {
@@ -37,6 +50,7 @@ function mostrarGestion() {
     document.getElementById("gestion").style.display = "block";
     document.getElementById("partejugarmostrable").style.display = "none";
     document.getElementById("partejugarnomostrar").style.display = "none";
+    desbloquearSelectores()
 }
 
 function mostrarJugar() {
@@ -44,6 +58,7 @@ function mostrarJugar() {
     document.getElementById("gestion").style.display = "none";
     document.getElementById("partejugarmostrable").style.display = "block";
     document.getElementById("partejugarnomostrar").style.display = "none";
+    desbloquearSelectores()
 }
 
 // Objeto para almacenar colores por tema
@@ -213,6 +228,7 @@ function Jugar(event) {
         tema.disabled = true;
         nivel.disabled = true;
         nivel.readOnly = true;
+        juegoEnCurso = true;
 
         document.getElementById("descripciongeneral").style.display = "none";
         document.getElementById("gestion").style.display = "none";
@@ -395,11 +411,24 @@ function actualizarPuntaje(puntos) {
     puntajeElement.textContent = `Puntaje acumulado en esta Partida: ${puntaje}`;
 }
 function terminarJuego() {
-    // Mostrar puntaje en una ventana emergente
     alert(`Puntaje acumulado en esta partida: ${puntaje}`);
-    // Restablecer el juego
+
+    // Actualizar el puntaje máximo si el puntaje actual es mayor
+    if (puntaje > puntajeMaximo) {
+        puntajeMaximo = puntaje;
+        document.getElementById("puntajemaximo").textContent = `Máximo puntaje obtenido por un jugador: ${puntajeMaximo}`;
+    }
+
+    // Reiniciar la interfaz de juego
+    document.getElementById("IDtemaElegir").disabled = false;
+    document.getElementById("IDnivelJuego").disabled = false;
+
+    // Reiniciar el puntaje
     puntaje = 0;
-    document.getElementById("puntaje").textContent = `Puntaje acumulado en esta Partida: ${puntaje}`;
+    document.getElementById("puntaje").textContent = `Puntaje acumulado en esta partida: ${puntaje}`;
+
+    // Indicar que el juego ha terminado
+    juegoEnCurso = false;
 }
 function actualizarPromedioPreguntas() {
     let totalPreguntas = preguntas.length;
@@ -409,3 +438,18 @@ function actualizarPromedioPreguntas() {
     let promedioElement = document.getElementById("promedio");
     promedioElement.textContent = `Promedio de preguntas por tema (cantidad total de preguntas/cantidad total de temas): ${promedio}`;
 }
+
+function desbloquearSelectores() {
+    let tema = document.getElementById("IDtemaElegir");
+    let nivel = document.getElementById("IDnivelJuego");
+    tema.disabled = false;
+    nivel.disabled = false;
+    nivel.readOnly = false;
+}
+
+function terminarJuegoSiEstaEnCurso() {
+    if (juegoEnCurso) {
+        terminarJuego();
+    }
+}
+
