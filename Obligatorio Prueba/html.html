@@ -67,7 +67,6 @@
         <form class="margenes" id="formAltaPregunta">
             <label for="IDtema">Tema</label>
             <select id="IDtema" name="tema" required>
-                <!-- Opciones de temas se agregan dinámicamente desde JavaScript -->
             </select>
             <label for="IDnivel">Nivel</label>
             <input type="number" id="IDnivel" name="nivel" min="1" max="5" required>
@@ -91,7 +90,7 @@
         <input type="radio" id="IDopciondecreciente" name="orden" value="decreciente">
         <label for="IDopciondecreciente">Orden nombre tema decreciente/nivel decreciente</label>        
         <div class="table-container">
-            <table class="tabla2">
+            <table class="tabla2" id="tablaPreguntas">
                 <thead class="tabla2">
                     <tr class="tabla2th">
                         <th class="tabla2th">Nombre del tema</th>

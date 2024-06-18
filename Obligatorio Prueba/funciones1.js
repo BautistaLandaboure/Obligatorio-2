@@ -1,5 +1,6 @@
 // Función que se ejecuta al cargar la página
 window.addEventListener("load", inicio);
+
 // Variable para indicar si un juego está en curso
 let juegoEnCurso = false;
 let puntajeMaximo = 0;
@@ -36,6 +37,45 @@ function inicio() {
     }
     // Inicializar el puntaje
     actualizarPuntaje(0);
+
+    // Agregar evento al formulario para agregar preguntas
+    document.getElementById("formAltaPregunta").addEventListener("submit", function(event) {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
+
+        // Obtener valores del formulario
+        let temaSeleccionado = document.getElementById("IDtema").value;
+        let nivel = parseInt(document.getElementById("IDnivel").value);
+        let textoPregunta = document.getElementById("IDtextopregunta").value;
+        let respuestaCorrecta = document.getElementById("IDrespcorrecta").value;
+        let respuestasIncorrectas = document.getElementById("IDrespincorrecta").value.split(",").map(resp => resp.trim());
+
+        // Verificar si el tema seleccionado existe en la lista de temas
+        let tema = null; // Asegurar que tema esté definido antes de usarlo
+
+        // Agregar verificación para evitar errores si sistema no está definido
+        if (typeof sistema !== 'undefined') {
+            tema = sistema.listaTemas.find(t => t.nombre.toLowerCase() === temaSeleccionado.toLowerCase());
+        }
+
+        if (tema) {
+            // Crear nueva pregunta y agregarla a la lista
+            let nuevaPregunta = new Pregunta(textoPregunta, respuestaCorrecta, respuestasIncorrectas, nivel, tema);
+            // Asegurar que sistema.listaPreguntas esté definido antes de usarlo
+            if (typeof sistema !== 'undefined' && sistema.listaPreguntas) {
+                sistema.listaPreguntas.push(nuevaPregunta);
+
+                // Opcional: Limpiar los campos del formulario después de agregar la pregunta
+                document.getElementById("formAltaPregunta").reset();
+
+                // Actualizar la tabla o lista de preguntas en la UI
+                agregarDatos(sistema.listaPreguntas);
+            } else {
+                alert("Error: sistema.listaPreguntas no está definido.");
+            }
+        } else {
+            alert("Tema no encontrado.");
+        }
+    });
 }
 function mostrarDescripcion() {
     document.getElementById("descripciongeneral").style.display = "block";
@@ -303,28 +343,34 @@ function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
 function manejarRespuesta(boton, respuestaSeleccionada, respuestaCorrecta) {
     if (respuestaSeleccionada === respuestaCorrecta) {
         boton.style.backgroundColor = "green";
+        reproducirSonido("respuestacorrecta.mp3");
 
         // Deshabilitar todos los botones después de seleccionar una respuesta correcta
         let botonesRespuestas = document.querySelectorAll(".botonrespuesta");
         botonesRespuestas.forEach((boton) => {
             boton.disabled = true;
         });
+
         // Sumar puntos por respuesta correcta
         actualizarPuntaje(10);
     } else {
         boton.style.backgroundColor = "red";
         boton.disabled = true; // Deshabilitar solo el botón de respuesta incorrecta seleccionado
+        reproducirSonido("respuestaincorrecta.mp3");
+
         // Restar puntos por respuesta incorrecta
         actualizarPuntaje(-1);
     }
 }
 
-function mostrarAyuda() {
-    let respuestaCorrecta = obtenerRespuestaCorrecta();
+function reproducirSonido(nombreArchivo) {
+    let audio = new Audio(nombreArchivo);
+    audio.play();
+}
 
-    // Mostrar la primera letra o número de la respuesta correcta
-    let primeraLetra = respuestaCorrecta.charAt(0);
-    alert(`La primera letra o número de la respuesta correcta es: ${primeraLetra}`);
+function mostrarAyuda() {
+    // Mostrar un mensaje informativo
+    alert("La ayuda es solo para mostrar la primera letra o número de la respuesta correcta. No afecta el estado del juego.");
 }
 
 function obtenerRespuestaCorrecta() {
@@ -396,40 +442,56 @@ function rgbToHsl(r, g, b) {
 }
 
 function cambiarPregunta() {
-    let temaSeleccionado = document.getElementById("IDtemaElegir").value;
-    let nivelSeleccionado = parseInt(document.getElementById("IDnivelJuego").value);
+    // Verificar si el juego está en curso antes de cambiar la pregunta
+    if (juegoEnCurso) {
+        let temaSeleccionado = document.getElementById("IDtemaElegir").value;
+        let nivelSeleccionado = parseInt(document.getElementById("IDnivelJuego").value);
 
-    if (temaSeleccionado && nivelSeleccionado) {
-        temaSeleccionado = temaSeleccionado.toLowerCase();
-        mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado);
-    }
+        if (temaSeleccionado && nivelSeleccionado) {
+            temaSeleccionado = temaSeleccionado.toLowerCase();
+            mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado);
+        }
 }
+}
+
 function actualizarPuntaje(puntos) {
     puntaje += puntos;
     // Actualizar el puntaje en el elemento HTML correspondiente
     let puntajeElement = document.getElementById("puntaje");
     puntajeElement.textContent = `Puntaje acumulado en esta Partida: ${puntaje}`;
 }
+
 function terminarJuego() {
-    alert(`Puntaje acumulado en esta partida: ${puntaje}`);
+    // Mostrar puntaje acumulado solo si el juego estaba en curso
+    if (juegoEnCurso) {
+        alert(`Puntaje acumulado en esta partida: ${puntaje}`);
 
-    // Actualizar el puntaje máximo si el puntaje actual es mayor
-    if (puntaje > puntajeMaximo) {
-        puntajeMaximo = puntaje;
-        document.getElementById("puntajemaximo").textContent = `Máximo puntaje obtenido por un jugador: ${puntajeMaximo}`;
+        // Actualizar el puntaje máximo si el puntaje actual es mayor
+        if (puntaje > puntajeMaximo) {
+            puntajeMaximo = puntaje;
+            document.getElementById("puntajemaximo").textContent = `Máximo puntaje obtenido por un jugador: ${puntajeMaximo}`;
+
+            // Guardar el puntaje máximo en localStorage
+            localStorage.setItem("puntajeMaximo", puntajeMaximo);
+        }
+
+        // Reiniciar la interfaz de juego
+        document.getElementById("IDtemaElegir").disabled = false;
+        document.getElementById("IDnivelJuego").disabled = false;
+        
+        // Limpiar las preguntas mostradas y reiniciar estado de juego
+        preguntasMostradas = [];
+        juegoEnCurso = false;
+
+        // Reiniciar el puntaje
+        puntaje = 0;
+        document.getElementById("puntaje").textContent = `Puntaje acumulado en esta partida: ${puntaje}`;
+
+        // Actualizar la UI para mostrar la sección de jugar nuevamente si es necesario
+        mostrarJugar();
     }
-
-    // Reiniciar la interfaz de juego
-    document.getElementById("IDtemaElegir").disabled = false;
-    document.getElementById("IDnivelJuego").disabled = false;
-
-    // Reiniciar el puntaje
-    puntaje = 0;
-    document.getElementById("puntaje").textContent = `Puntaje acumulado en esta partida: ${puntaje}`;
-
-    // Indicar que el juego ha terminado
-    juegoEnCurso = false;
 }
+
 function actualizarPromedioPreguntas() {
     let totalPreguntas = preguntas.length;
     let totalTemas = temasRegistrados.length;
@@ -452,4 +514,3 @@ function terminarJuegoSiEstaEnCurso() {
         terminarJuego();
     }
 }
-

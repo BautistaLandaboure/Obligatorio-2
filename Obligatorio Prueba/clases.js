@@ -15,23 +15,23 @@ class Pregunta {
     }
 }
 
-class Sistema {
-    constructor() {
-        this.listaPreguntas = [];
-        this.listaTemas = [];
+    class Sistema {
+        constructor() {
+            this.listaPreguntas = [];
+            this.listaTemas = [];
+        }
+
+        agregar(unTema) {
+            this.listaTemas.push(unTema);
+        }
+
+        estaTema(tema) {
+            return this.listaTemas.some(t => t.nombre === tema.nombre);
+        }
     }
 
-    agregar(unTema) {
-        this.listaTemas.push(unTema);
-    }
 
-    estaTema(tema) {
-        return this.listaTemas.some(t => t.nombre === tema.nombre);
-    }
-}
-
-// La variable preguntas solo se declara una vez
-const preguntas = [
+let preguntas = [
 
     new Pregunta(
         "¿Cuál es la capital de Francia?",
