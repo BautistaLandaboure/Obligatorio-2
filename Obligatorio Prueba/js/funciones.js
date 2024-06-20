@@ -1,14 +1,19 @@
-// Función que se ejecuta al cargar la página
+
 window.addEventListener("load", inicio);
+
 let sistema = new Sistema();
-
-
-// Variable para indicar si un juego está en curso
 let juegoEnCurso = false;
 let puntajeMaximo = 0;
+let preguntasMostradas = [];
+let puntaje = 0;
+let coloresPorTema = {};
 
 function inicio() {
+
     mostrarDescripcion();
+
+    document.getElementById('formAltaTemas').onsubmit = agregarTemas;
+
     document.getElementById("linkDescripcion").addEventListener("click", function() {
         terminarJuegoSiEstaEnCurso();
         mostrarDescripcion();
@@ -31,54 +36,21 @@ function inicio() {
     });
     document.getElementById("botonSiguientePregunta").addEventListener("click", cambiarPregunta);
     document.getElementById("botonTerminar").addEventListener("click", terminarJuego);
+
     // Verificar si se accede a otras pestañas
     window.addEventListener("blur", terminarJuego);
+
     let deseaCargarDatos = confirm("¿Desea que hayan datos cargados?");
     if (deseaCargarDatos) {
-        agregarDatos(preguntas);
+        datosPrecargados(preguntas);
     }
     // Inicializar el puntaje
     actualizarPuntaje(0);
 
-    // Agregar evento al formulario para agregar preguntas
-    document.getElementById("formAltaPregunta").addEventListener("submit", function(event) {
-        event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
-
-        // Obtener valores del formulario
-        let temaSeleccionado = document.getElementById("IDtema").value;
-        let nivel = parseInt(document.getElementById("IDnivel").value);
-        let textoPregunta = document.getElementById("IDtextopregunta").value;
-        let respuestaCorrecta = document.getElementById("IDrespcorrecta").value;
-        let respuestasIncorrectas = document.getElementById("IDrespincorrecta").value.split(",").map(resp => resp.trim());
-
-        // Verificar si el tema seleccionado existe en la lista de temas
-        let tema = null; // Asegurar que tema esté definido antes de usarlo
-
-        // Agregar verificación para evitar errores si sistema no está definido
-        if (typeof sistema !== 'undefined') {
-            tema = sistema.listaTemas.find(t => t.nombre.toLowerCase() === temaSeleccionado.toLowerCase());
-        }
-
-        if (tema) {
-            // Crear nueva pregunta y agregarla a la lista
-            let nuevaPregunta = new Pregunta(textoPregunta, respuestaCorrecta, respuestasIncorrectas, nivel, tema);
-            // Asegurar que sistema.listaPreguntas esté definido antes de usarlo
-            if (typeof sistema !== 'undefined' && sistema.listaPreguntas) {
-                sistema.listaPreguntas.push(nuevaPregunta);
-
-                // Opcional: Limpiar los campos del formulario después de agregar la pregunta
-                document.getElementById("formAltaPregunta").reset();
-
-                // Actualizar la tabla o lista de preguntas en la UI
-                agregarDatos(sistema.listaPreguntas);
-            } else {
-                alert("Error: sistema.listaPreguntas no está definido.");
-            }
-        } else {
-            alert("Tema no encontrado.");
-        }
-    });
 }
+
+
+
 function mostrarDescripcion() {
     document.getElementById("descripciongeneral").style.display = "block";
     document.getElementById("gestion").style.display = "none";
@@ -104,9 +76,9 @@ function mostrarJugar() {
 }
 
 // Objeto para almacenar colores por tema
-let coloresPorTema = {};
 
-function agregarDatos(preguntas) {
+
+function datosPrecargados(preguntas) {
     let tbody = document.querySelector(".tabla2 tbody");
 
     temasRegistrados = [];
@@ -246,14 +218,9 @@ function ordenarPreguntas(tipoOrden) {
       });
     }
 
-    agregarDatos(preguntasOrdenadas);
+    datosPrecargados(preguntasOrdenadas);
 }
 
-// Array para almacenar las preguntas mostradas
-let preguntasMostradas = [];
-
-// Variable para mantener el puntaje
-let puntaje = 0;
 function Jugar(event) {
     event.preventDefault(); // Evitar el comportamiento predeterminado del formulario
 
@@ -516,3 +483,63 @@ function terminarJuegoSiEstaEnCurso() {
         terminarJuego();
     }
 }
+
+// Función para manejar el evento de envío del formulario
+function agregarTemas(event) {
+    event.preventDefault(); // Evita que se recargue la página al enviar el formulario
+
+    // Captura de valores del formulario
+    const nombre = document.getElementById('IDnombre').value;
+    const descripcion = document.getElementById('IDdescripcion').value;
+
+    // Creación de un nuevo tema
+    const nuevoTema = new Tema(nombre, descripcion);
+
+    // Verificación de la existencia del tema en el sistema
+    if (sistema.estaTema(nuevoTema)) {
+        alert('El tema ya existe.');
+    } else {
+        sistema.agregar(nuevoTema);
+        alert('Tema agregado exitosamente.');
+
+        // Actualizar la lista de temas registrados
+        temasRegistrados.push(nombre);
+
+        // Asignar un color aleatorio único al tema si no está registrado
+        if (!coloresPorTema[nombre.toLowerCase()]) {
+            coloresPorTema[nombre.toLowerCase()] = generarColorAleatorio();
+        }
+
+        // Actualizar la tabla y los selectores
+        actualizarListaTemas();
+        actualizarSelectTemas();
+        actualizarSelectTemas2();
+        actualizarContadorTemas();
+        actualizarPromedioPreguntas();
+        actualizarTemasSinPreguntas();
+    }
+
+    // Limpia los campos del formulario
+    document.getElementById('formAltaTemas').reset();
+}
+
+function actualizarTemasSinPreguntas() {
+    let temasConPreguntas = preguntas.map(pregunta => pregunta.tema.nombre.toLowerCase());
+    let temasSinPreguntas = temasRegistrados.filter(tema => !temasConPreguntas.includes(tema.toLowerCase()));
+
+    let listaTemasSinPreguntas = document.getElementById("lista-temas-sin-preguntas");
+    listaTemasSinPreguntas.innerHTML = "";
+
+    if (temasSinPreguntas.length === 0) {
+        let sinDatos = document.createElement("li");
+        sinDatos.textContent = "Sin Datos";
+        listaTemasSinPreguntas.appendChild(sinDatos);
+    } else {
+        temasSinPreguntas.forEach((tema) => {
+            let elementoLista = document.createElement("li");
+            elementoLista.textContent = tema;
+            listaTemasSinPreguntas.appendChild(elementoLista);
+        });
+    }
+}
+
