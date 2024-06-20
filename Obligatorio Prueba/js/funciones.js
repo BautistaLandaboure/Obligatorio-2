@@ -1,5 +1,7 @@
 // Función que se ejecuta al cargar la página
 window.addEventListener("load", inicio);
+let sistema = new Sistema();
+
 
 // Variable para indicar si un juego está en curso
 let juegoEnCurso = false;
@@ -343,7 +345,7 @@ function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
 function manejarRespuesta(boton, respuestaSeleccionada, respuestaCorrecta) {
     if (respuestaSeleccionada === respuestaCorrecta) {
         boton.style.backgroundColor = "green";
-        reproducirSonido("respuestacorrecta.mp3");
+        reproducirSonido("audio/respuestacorrecta.mp3");
 
         // Deshabilitar todos los botones después de seleccionar una respuesta correcta
         let botonesRespuestas = document.querySelectorAll(".botonrespuesta");
@@ -356,7 +358,7 @@ function manejarRespuesta(boton, respuestaSeleccionada, respuestaCorrecta) {
     } else {
         boton.style.backgroundColor = "red";
         boton.disabled = true; // Deshabilitar solo el botón de respuesta incorrecta seleccionado
-        reproducirSonido("respuestaincorrecta.mp3");
+        reproducirSonido("audio/respuestaincorrecta.mp3");
 
         // Restar puntos por respuesta incorrecta
         actualizarPuntaje(-1);
