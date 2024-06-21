@@ -64,7 +64,7 @@
         </ul>
         <h2 class="margentitulo">Gesti&oacute;n de preguntas</h2>
         <h3>Alta de preguntas</h3>
-        <form class="margenes" id="formAltaPregunta">
+        <form class="margenes" id="formAltaPregunta" onsubmit="agregarPreguntas(event)">
             <label for="IDtema">Tema</label>
             <select id="IDtema" name="tema" required>
             </select>
@@ -77,7 +77,7 @@
             <input type="text" id="IDrespcorrecta" class="respuestas" name="respcorrecta" required>
             <label for="IDrespincorrecta">Respuestas Incorrectas </label>
             <input type="text" id="IDrespincorrecta" class="respuestas" name="respincorrecta" required>
-            <input type="submit" value="Agregar">
+            <button type="submit" id="botonAgregarPregunta">Agregar</button>
         </form>
         
         <br>

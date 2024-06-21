@@ -1,4 +1,3 @@
-
 window.addEventListener("load", inicio);
 
 let sistema = new Sistema();
@@ -13,6 +12,7 @@ function inicio() {
     mostrarDescripcion();
 
     document.getElementById('formAltaTemas').onsubmit = agregarTemas;
+    document.getElementById('formAltaPregunta').onsubmit = agregarPreguntas;
 
     document.getElementById("linkDescripcion").addEventListener("click", function() {
         terminarJuegoSiEstaEnCurso();
@@ -144,14 +144,15 @@ function actualizarContadorPreguntas() {
     let filasVisibles = tbody.querySelectorAll("tr");
 
     let contadorPreguntasVisibles = 0;
-    filasVisibles.forEach((fila) => {
+    for (let i = 0; i < filasVisibles.length; i++) {
+        let fila = filasVisibles[i];
         if (fila.style.display !== "none") {
             contadorPreguntasVisibles++;
         }
-    });
+    }
 
     let contador = document.getElementById("contador-preguntas");
-    contador.innerHTML = `Total de preguntas registradas: ${contadorPreguntasVisibles} preguntas`;
+    contador.innerHTML = "Total de preguntas registradas: " + contadorPreguntasVisibles + " preguntas";
 }
 
 function actualizarContadorTemas() {
@@ -169,38 +170,41 @@ function actualizarListaTemas() {
         sinDatos.textContent = "Sin Datos";
         listaTemas.appendChild(sinDatos);
     } else {
-        temasRegistrados.forEach((tema) => {
+        for (let i = 0; i < temasRegistrados.length; i++) {
+            let tema = temasRegistrados[i];
             let elementoLista = document.createElement("li");
             elementoLista.textContent = tema;
             listaTemas.appendChild(elementoLista);
-        });
+        }
     }
 }
 
 function actualizarSelectTemas() {
     let selectTemas = document.getElementById("IDtemaElegir");
-
     selectTemas.innerHTML = '<option value="" disabled selected hidden>Elija una opción</option>';
 
-    temasRegistrados.forEach((tema) => {
+    for (let i = 0; i < temasRegistrados.length; i++) {
+        let tema = temasRegistrados[i];
         let opcion = document.createElement("option");
         opcion.value = tema.toLowerCase();
         opcion.textContent = tema;
         selectTemas.appendChild(opcion);
-    });
+    }
 }
 
-function actualizarSelectTemas2(){
+function actualizarSelectTemas2() {
     let selectTemas = document.getElementById("IDtema");
     selectTemas.innerHTML = '<option value="" disabled selected hidden>Elija una opción</option>';
-    temasRegistrados.forEach((tema) => {
+
+    for (let i = 0; i < temasRegistrados.length; i++) {
+        let tema = temasRegistrados[i];
         let opcion = document.createElement("option");
         opcion.value = tema.toLowerCase();
         opcion.textContent = tema;
         selectTemas.appendChild(opcion);
-    });
-
+    }
 }
+
 function ordenarPreguntas(tipoOrden) {
     let preguntasOrdenadas = preguntas.slice(); // Crear una copia del array de preguntas
 
@@ -261,14 +265,15 @@ function Jugar(event) {
 
 function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
     // Filtrar las preguntas por tema y nivel
-    let preguntasFiltradas = preguntas.filter(pregunta => 
-        pregunta.tema.nombre.toLowerCase() === temaSeleccionado && pregunta.nivel === nivelSeleccionado
-    );
+    let preguntasFiltradas = preguntas.filter(function(pregunta) {
+        return pregunta.tema.nombre.toLowerCase() === temaSeleccionado && pregunta.nivel === nivelSeleccionado;
+    });
 
     // Filtrar las preguntas que ya se han mostrado
-    let preguntasDisponibles = preguntasFiltradas.filter(pregunta => 
-        !preguntasMostradas.includes(pregunta.texto)
-    );
+    let preguntasDisponibles = preguntasFiltradas.filter(function(pregunta) {
+        return !preguntasMostradas.includes(pregunta.texto);
+    });
+
     // Verificar si hay preguntas disponibles
     if (preguntasDisponibles.length === 0) {
         alert("No hay más preguntas disponibles para este tema y nivel.");
@@ -276,7 +281,6 @@ function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
     }
 
     // Obtener una pregunta aleatoria de las disponibles
-    // Seleccionar una pregunta aleatoria de las disponibles
     let preguntaAleatoria = preguntasDisponibles[Math.floor(Math.random() * preguntasDisponibles.length)];
 
     // Agregar la pregunta mostrada al array de preguntas mostradas
@@ -292,9 +296,9 @@ function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
 
     // Crear botones para cada respuesta
     preguntaAleatoria.respuestasIncorrectas.push(preguntaAleatoria.respuestaCorrecta); // Agregar la respuesta correcta a las incorrectas
-    preguntaAleatoria.respuestasIncorrectas.sort(() => Math.random() - 0.5); // Mezclar las respuestas
+    preguntaAleatoria.respuestasIncorrectas.sort(function() { return Math.random() - 0.5; }); // Mezclar las respuestas
 
-    preguntaAleatoria.respuestasIncorrectas.forEach((respuesta, index) => {
+    preguntaAleatoria.respuestasIncorrectas.forEach(function(respuesta, index) {
         let botonRespuesta = document.createElement("button");
         botonRespuesta.className = "botonrespuesta";
         botonRespuesta.textContent = respuesta;
@@ -303,7 +307,9 @@ function mostrarPreguntaSegunSeleccion(temaSeleccionado, nivelSeleccionado) {
         botonRespuesta.style.backgroundColor = coloresPorTema[temaSeleccionado];
 
         // Agregar evento de click a cada botón de respuesta
-        botonRespuesta.addEventListener("click", () => manejarRespuesta(botonRespuesta, respuesta, preguntaAleatoria.respuestaCorrecta));
+        botonRespuesta.addEventListener("click", function() {
+            manejarRespuesta(botonRespuesta, respuesta, preguntaAleatoria.respuestaCorrecta);
+        });
 
         filaBotones.appendChild(botonRespuesta);
     });
@@ -316,7 +322,7 @@ function manejarRespuesta(boton, respuestaSeleccionada, respuestaCorrecta) {
 
         // Deshabilitar todos los botones después de seleccionar una respuesta correcta
         let botonesRespuestas = document.querySelectorAll(".botonrespuesta");
-        botonesRespuestas.forEach((boton) => {
+        botonesRespuestas.forEach(function(boton) {
             boton.disabled = true;
         });
 
@@ -331,6 +337,7 @@ function manejarRespuesta(boton, respuestaSeleccionada, respuestaCorrecta) {
         actualizarPuntaje(-1);
     }
 }
+
 
 function reproducirSonido(nombreArchivo) {
     let audio = new Audio(nombreArchivo);
@@ -350,7 +357,7 @@ function obtenerRespuestaCorrecta() {
     let tabla = document.querySelector(".tabla2");
     if (tabla) {
         let filas = tabla.querySelectorAll("tbody tr");
-        filas.forEach((fila) => {
+        filas.forEach(function(fila) {
             if (fila.style.display !== "none") {
                 let tdRespuestaCorrecta = fila.querySelector("td:nth-child(4)"); // Cambia el índice según la estructura de tu tabla
                 if (tdRespuestaCorrecta) {
@@ -364,50 +371,51 @@ function obtenerRespuestaCorrecta() {
 }
 
 function generarColorAleatorio() {
-    let r = Math.floor(Math.random() * 256);
-    let g = Math.floor(Math.random() * 256);
-    let b = Math.floor(Math.random() * 256);
-
-    // Convertir a color hexadecimal
-    let colorHex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-
-    // Verificar brillo y ajustar si es necesario
-    // Convertir a HSL para evaluar el brillo
-    let hsl = rgbToHsl(r, g, b);
-    
-    // Si el color es más claro que el amarillo, lo oscurecemos
-    if (hsl[2] > 0.9) {
-        return "#FFFF66"; // Amarillo claro
+    // Generar un hue que sea de la gama amarilla-marrón (0-60) o verde oscuro (90-120)
+    let h = Math.random() * 30;
+    if (Math.random() < 0.5) {
+        h += 30; // Rango 30-60 (amarillo a marrón)
     }
 
-    // Si el color es más oscuro que el marrón, lo aclaramos
-    if (hsl[2] < 0.1) {
-        return "#663300"; // Marrón oscuro
-    }
+    // Saturación entre 50% y 100%
+    let s = Math.random() * 0.5 + 0.5;
+
+    // Brillo entre 30% y 50%
+    let l = Math.random() * 0.2 + 0.3;
+
+    let rgb = hslToRgb(h / 360, s, l);
+    let colorHex = rgbToHex(rgb[0], rgb[1], rgb[2]);
 
     return colorHex;
 }
 
-function rgbToHsl(r, g, b) {
-    r /= 255, g /= 255, b /= 255;
+function hslToRgb(h, s, l) {
+    let r, g, b;
 
-    let max = Math.max(r, g, b), min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
-  
-    if (max == min) {
-      h = s = 0; // achromatic
+    if (s == 0) {
+        r = g = b = l; // achromatic
     } else {
-      let d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
-      }
-      h /= 6;
+        let hue2rgb = function(p, q, t) {
+            if (t < 0) t += 1;
+            if (t > 1) t -= 1;
+            if (t < 1/6) return p + (q - p) * 6 * t;
+            if (t < 1/2) return q;
+            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+
+        let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        let p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
     }
 
-    return [h, s, l];
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
 }
 
 function cambiarPregunta() {
@@ -499,7 +507,7 @@ function agregarTemas(event) {
     if (sistema.estaTema(nuevoTema)) {
         alert('El tema ya existe.');
     } else {
-        sistema.agregar(nuevoTema);
+        sistema.agregarTema(nuevoTema);
         alert('Tema agregado exitosamente.');
 
         // Actualizar la lista de temas registrados
@@ -524,8 +532,13 @@ function agregarTemas(event) {
 }
 
 function actualizarTemasSinPreguntas() {
-    let temasConPreguntas = preguntas.map(pregunta => pregunta.tema.nombre.toLowerCase());
-    let temasSinPreguntas = temasRegistrados.filter(tema => !temasConPreguntas.includes(tema.toLowerCase()));
+    let temasConPreguntas = preguntas.map(function(pregunta) {
+        return pregunta.tema.nombre.toLowerCase();
+    });
+
+    let temasSinPreguntas = temasRegistrados.filter(function(tema) {
+        return !temasConPreguntas.includes(tema.toLowerCase());
+    });
 
     let listaTemasSinPreguntas = document.getElementById("lista-temas-sin-preguntas");
     listaTemasSinPreguntas.innerHTML = "";
@@ -535,7 +548,7 @@ function actualizarTemasSinPreguntas() {
         sinDatos.textContent = "Sin Datos";
         listaTemasSinPreguntas.appendChild(sinDatos);
     } else {
-        temasSinPreguntas.forEach((tema) => {
+        temasSinPreguntas.forEach(function(tema) {
             let elementoLista = document.createElement("li");
             elementoLista.textContent = tema;
             listaTemasSinPreguntas.appendChild(elementoLista);
@@ -543,3 +556,5 @@ function actualizarTemasSinPreguntas() {
     }
 }
 
+function agregarPreguntas(event) {
+} 

@@ -15,19 +15,25 @@ class Pregunta {
     }
 }
 
- class Sistema {
-        constructor() {
-            this.listaPreguntas = [];
-            this.listaTemas = [];
-        }
-
-        agregar(unTema) {
-            this.listaTemas.push(unTema);
-        }
-
-        estaTema(tema) {
-            return this.listaTemas.some(t => t.nombre === tema.nombre);
-        }
+class Sistema {
+    constructor() {
+        this.listaPreguntas = [];
+        this.listaTemas = [];
     }
 
-  
+    agregarTema(unTema) {
+        this.listaTemas.push(unTema);
+    }
+
+    estaTema(tema) {
+        return this.listaTemas.some(t => t.nombre === tema.nombre);
+    }
+
+    agregarPregunta(unaPregunta) {
+        this.listaPreguntas.push(unaPregunta);
+    }
+
+    estaPregunta(pregunta) {
+        return this.listaPreguntas.some(p => p.texto === pregunta.texto);
+    }
+}
