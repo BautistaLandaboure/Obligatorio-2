@@ -11,7 +11,7 @@ class Pregunta {
         this.respuestaCorrecta = respuestaCorrecta;
         this.respuestasIncorrectas = respuestasIncorrectas;
         this.nivel = nivel;
-        this.tema = new Tema(tema.nombre, tema.descripcion);
+        this.tema = tema;
     }
 }
 

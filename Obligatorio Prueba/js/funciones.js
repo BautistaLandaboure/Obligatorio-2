@@ -557,4 +557,30 @@ function actualizarTemasSinPreguntas() {
 }
 
 function agregarPreguntas(event) {
-} 
+    event.preventDefault();
+
+    const tema = document.getElementById('IDtema').value;
+    const nivel = parseInt(document.getElementById('IDnivel').value);
+    const textoPregunta = document.getElementById('IDtextopregunta').value;
+    const respuestaCorrecta = document.getElementById('IDrespcorrecta').value;
+    const respuestasIncorrectas = document.getElementById('IDrespincorrecta').value.split(',');
+    
+    // Crear una nueva pregunta
+    const nuevaPregunta = new Pregunta(textoPregunta, respuestaCorrecta, respuestasIncorrectas, nivel, {nombre: tema});
+
+    if (sistema.estaPregunta(nuevaPregunta)) {
+        alert("Esta pregunta ya existe.");
+    } else {
+        sistema.agregarPregunta(nuevaPregunta);
+        alert("Pregunta agregada exitosamente.");
+        
+        // Actualizar el array de preguntas global
+        preguntas.push(nuevaPregunta);
+
+        // Actualizar la tabla de preguntas
+        datosPrecargados(preguntas);
+    }
+
+    // Limpiar el formulario
+    event.target.reset();
+}
