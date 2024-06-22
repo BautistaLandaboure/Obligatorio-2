@@ -6,9 +6,9 @@ let puntajeMaximo = 0;
 let preguntasMostradas = [];
 let puntaje = 0;
 let coloresPorTema = {};
+ let temasRegistrados = [];
 
-function inicio() {
-
+ function inicio() {
     mostrarDescripcion();
 
     document.getElementById('formAltaTemas').onsubmit = agregarTemas;
@@ -37,16 +37,12 @@ function inicio() {
     document.getElementById("botonSiguientePregunta").addEventListener("click", cambiarPregunta);
     document.getElementById("botonTerminar").addEventListener("click", terminarJuego);
 
-    // Verificar si se accede a otras pestañas
-    window.addEventListener("blur", terminarJuego);
-
     let deseaCargarDatos = confirm("¿Desea que hayan datos cargados?");
     if (deseaCargarDatos) {
         datosPrecargados(preguntas);
     }
     // Inicializar el puntaje
     actualizarPuntaje(0);
-
 }
 
 
@@ -345,10 +341,19 @@ function reproducirSonido(nombreArchivo) {
 }
 
 function mostrarAyuda() {
-    // Mostrar un mensaje informativo
-    alert("La ayuda es solo para mostrar la primera letra o número de la respuesta correcta. No afecta el estado del juego.");
-}
+    // Obtener la respuesta correcta de la pregunta mostrada
+    let respuestaCorrecta = obtenerRespuestaCorrecta();
 
+    if (respuestaCorrecta) {
+        // Obtener el primer caracter de la respuesta correcta
+        let primerCaracter = respuestaCorrecta.charAt(0);
+
+        // Mostrar un mensaje informativo con el primer caracter de la respuesta correcta
+        alert(`La primera letra o número de la respuesta correcta es: ${primerCaracter}.`);
+    } else {
+        alert("No se encontró ninguna pregunta visible para mostrar ayuda.");
+    }
+}
 function obtenerRespuestaCorrecta() {
     // Obtener el texto de la respuesta correcta de la pregunta mostrada
     let textoRespuestaCorrecta = "";
@@ -562,9 +567,15 @@ function agregarPreguntas(event) {
     const tema = document.getElementById('IDtema').value;
     const nivel = parseInt(document.getElementById('IDnivel').value);
     const textoPregunta = document.getElementById('IDtextopregunta').value;
-    const respuestaCorrecta = document.getElementById('IDrespcorrecta').value;
-    const respuestasIncorrectas = document.getElementById('IDrespincorrecta').value.split(',');
-    
+    const respuestaCorrecta = document.getElementById('IDrespcorrecta').value.trim();
+    const respuestasIncorrectas = document.getElementById('IDrespincorrecta').value.split(',').map(resp => resp.trim());
+
+    // Verificar si la respuesta correcta está en las respuestas incorrectas
+    if (respuestasIncorrectas.includes(respuestaCorrecta)) {
+        alert("La respuesta correcta no puede ser igual a ninguna de las respuestas incorrectas.");
+        return;
+    }
+
     // Crear una nueva pregunta
     const nuevaPregunta = new Pregunta(textoPregunta, respuestaCorrecta, respuestasIncorrectas, nivel, {nombre: tema});
 
@@ -579,8 +590,24 @@ function agregarPreguntas(event) {
 
         // Actualizar la tabla de preguntas
         datosPrecargados(preguntas);
+        actualizarTemasSinPreguntas(preguntas);
     }
 
     // Limpiar el formulario
     event.target.reset();
+}
+
+// Función para cambiar entre secciones
+function cambiarASeccion(seccion) {
+    // Verificar si el juego está en curso antes de cambiar de sección
+    if (juegoEnCurso) {
+        terminarJuego();
+    }
+
+    // Mostrar la sección deseada
+    if (seccion === "descripcion") {
+        mostrarDescripcion();
+    } else if (seccion === "gestion") {
+        mostrarGestion();
+}
 }
