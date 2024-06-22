@@ -104,7 +104,7 @@ nav li {
 .table-container {
     margin-top: 20px;
     margin-bottom: 20px;
-    max-height: 360px; /* Ajuste para mostrar alrededor de 6 preguntas */
+    max-height: 300px; /* Ajuste para mostrar alrededor de 6 preguntas */
     overflow-y: auto;
     border: 1px solid #ccc; /* Agrega un borde para diferenciar el área de la tabla */
 }
