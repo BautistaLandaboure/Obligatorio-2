@@ -28,12 +28,18 @@ class Sistema {
     estaTema(tema) {
         return this.listaTemas.some(t => t.nombre === tema.nombre);
     }
+    
 
     agregarPregunta(unaPregunta) {
         this.listaPreguntas.push(unaPregunta);
     }
 
     estaPregunta(pregunta) {
-        return this.listaPreguntas.some(p => p.texto === pregunta.texto);
+        for (let i = 0; i < this.listaPreguntas.length; i++) {
+            if (this.listaPreguntas[i].texto === pregunta.texto) {
+                return true;
+            }
+        }
+        return false;
     }
 }

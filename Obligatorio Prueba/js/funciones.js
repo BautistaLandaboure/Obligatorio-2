@@ -77,51 +77,13 @@ function mostrarJugar() {
 
 
 function datosPrecargados(preguntas) {
-    let tbody = document.querySelector(".tabla2 tbody");
-
+    
     temasRegistrados = [];
     limpiarTabla();
 
     for (let i = 0; i < preguntas.length; i++) {
         let pregunta = preguntas[i];
-
-        if (!temasRegistrados.includes(pregunta.tema.nombre.toLowerCase())) {
-            temasRegistrados.push(pregunta.tema.nombre.toLowerCase());
-
-            // Asignar un color aleatorio único al tema si no está registrado
-            if (!coloresPorTema[pregunta.tema.nombre.toLowerCase()]) {
-                coloresPorTema[pregunta.tema.nombre.toLowerCase()] = generarColorAleatorio();
-            }
-        }
-
-        let tr = document.createElement("tr");
-
-        // Asignar clase de tema y color según el tema
-        let colorTema = coloresPorTema[pregunta.tema.nombre.toLowerCase()];
-        tr.classList.add(`tema-${pregunta.tema.nombre.toLowerCase()}`);
-        tr.style.backgroundColor = colorTema;
-
-        let tdTema = document.createElement("td");
-        tdTema.innerHTML = pregunta.tema.nombre;
-        tr.appendChild(tdTema);
-
-        let tdNivel = document.createElement("td");
-        tdNivel.innerHTML = pregunta.nivel;
-        tr.appendChild(tdNivel);
-
-        let tdTexto = document.createElement("td");
-        tdTexto.innerHTML = pregunta.texto;
-        tr.appendChild(tdTexto);
-
-        let tdRespuestaCorrecta = document.createElement("td");
-        tdRespuestaCorrecta.innerHTML = pregunta.respuestaCorrecta;
-        tr.appendChild(tdRespuestaCorrecta);
-
-        let tdRespuestasIncorrectas = document.createElement("td");
-        tdRespuestasIncorrectas.innerHTML = pregunta.respuestasIncorrectas.join(", ");
-        tr.appendChild(tdRespuestasIncorrectas);
-
-        tbody.appendChild(tr);
+        agregarFilaPregunta(pregunta);
     }
 
     actualizarContadorPreguntas();
@@ -129,8 +91,48 @@ function datosPrecargados(preguntas) {
     actualizarListaTemas();
     actualizarSelectTemas();
     actualizarSelectTemas2();
-    actualizarPromedioPreguntas()
+    actualizarPromedioPreguntas();
 }
+
+function agregarFilaPregunta(pregunta) {
+    let tbody = document.querySelector(".tabla2 tbody");
+
+    if (!temasRegistrados.includes(pregunta.tema.nombre.toLowerCase())) {
+        temasRegistrados.push(pregunta.tema.nombre.toLowerCase());
+
+        if (!coloresPorTema[pregunta.tema.nombre.toLowerCase()]) {
+            coloresPorTema[pregunta.tema.nombre.toLowerCase()] = generarColorAleatorio();
+        }
+    }
+
+    let tr = document.createElement("tr");
+    let colorTema = coloresPorTema[pregunta.tema.nombre.toLowerCase()];
+    tr.classList.add(`tema-${pregunta.tema.nombre.toLowerCase()}`);
+    tr.style.backgroundColor = colorTema;
+
+    let tdTema = document.createElement("td");
+    tdTema.innerHTML = pregunta.tema.nombre;
+    tr.appendChild(tdTema);
+
+    let tdNivel = document.createElement("td");
+    tdNivel.innerHTML = pregunta.nivel;
+    tr.appendChild(tdNivel);
+
+    let tdTexto = document.createElement("td");
+    tdTexto.innerHTML = pregunta.texto;
+    tr.appendChild(tdTexto);
+
+    let tdRespuestaCorrecta = document.createElement("td");
+    tdRespuestaCorrecta.innerHTML = pregunta.respuestaCorrecta;
+    tr.appendChild(tdRespuestaCorrecta);
+
+    let tdRespuestasIncorrectas = document.createElement("td");
+    tdRespuestasIncorrectas.innerHTML = pregunta.respuestasIncorrectas.join(", ");
+    tr.appendChild(tdRespuestasIncorrectas);
+
+    tbody.appendChild(tr);
+}
+
 
 
 function limpiarTabla() {
@@ -577,32 +579,28 @@ function agregarPreguntas(event) {
     const respuestaCorrecta = document.getElementById('IDrespcorrecta').value.trim();
     const respuestasIncorrectas = document.getElementById('IDrespincorrecta').value.split(',').map(resp => resp.trim());
 
-    // Verificar si la respuesta correcta está en las respuestas incorrectas
     if (respuestasIncorrectas.includes(respuestaCorrecta)) {
         alert("La respuesta correcta no puede ser igual a ninguna de las respuestas incorrectas.");
         return;
     }
 
-    // Crear una nueva pregunta
-    const nuevaPregunta = new Pregunta(textoPregunta, respuestaCorrecta, respuestasIncorrectas, nivel, {nombre: tema});
+    const nuevaPregunta = new Pregunta(textoPregunta, respuestaCorrecta, respuestasIncorrectas, nivel, { nombre: tema });
 
     if (sistema.estaPregunta(nuevaPregunta)) {
         alert("Esta pregunta ya existe.");
     } else {
         sistema.agregarPregunta(nuevaPregunta);
-        
-        // Actualizar el array de preguntas global
         preguntas.push(nuevaPregunta);
 
-        // Actualizar la tabla de preguntas
-        datosPrecargados(preguntas);
+        agregarFilaPregunta(nuevaPregunta);
         actualizarTemasSinPreguntas(preguntas);
+        actualizarContadorPreguntas();
+        actualizarContadorTemas();
+        actualizarPromedioPreguntas();
     }
 
-    // Limpiar el formulario
     event.target.reset();
 }
-
 
 // Función para cambiar entre secciones
 function cambiarASeccion(seccion) {
