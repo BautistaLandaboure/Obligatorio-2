@@ -75,16 +75,14 @@ function mostrarJugar() {
 
 // Objeto para almacenar colores por tema
 
-
 function datosPrecargados(preguntas) {
-    
     temasRegistrados = [];
     limpiarTabla();
 
-    for (let i = 0; i < preguntas.length; i++) {
-        let pregunta = preguntas[i];
+    preguntas.forEach(pregunta => {
+        sistema.agregarPregunta(pregunta);
         agregarFilaPregunta(pregunta);
-    }
+    });
 
     actualizarContadorPreguntas();
     actualizarContadorTemas();
@@ -207,20 +205,20 @@ function actualizarSelectTemas2() {
 }
 
 function ordenarPreguntas(tipoOrden) {
-    let preguntasOrdenadas = preguntas.slice(); // Crear una copia del array de preguntas
+    let preguntasOrdenadas = [...sistema.listaPreguntas];
 
     if (tipoOrden === "creciente") {
-      preguntasOrdenadas.sort(function (a, b) {
-        if (a.tema.nombre < b.tema.nombre) return -1;
-        if (a.tema.nombre > b.tema.nombre) return 1;
-        return a.nivel - b.nivel;
-      });
+        preguntasOrdenadas.sort((a, b) => {
+            if (a.tema.nombre < b.tema.nombre) return -1;
+            if (a.tema.nombre > b.tema.nombre) return 1;
+            return a.nivel - b.nivel;
+        });
     } else if (tipoOrden === "decreciente") {
-      preguntasOrdenadas.sort(function (a, b) {
-        if (a.tema.nombre > b.tema.nombre) return -1;
-        if (a.tema.nombre < b.tema.nombre) return 1;
-        return b.nivel - a.nivel;
-      });
+        preguntasOrdenadas.sort((a, b) => {
+            if (a.tema.nombre > b.tema.nombre) return -1;
+            if (a.tema.nombre < b.tema.nombre) return 1;
+            return b.nivel - a.nivel;
+        });
     }
 
     datosPrecargados(preguntasOrdenadas);
@@ -571,7 +569,7 @@ function actualizarTemasSinPreguntas() {
 function agregarPreguntas(event) {
     event.preventDefault();
 
-    const tema = document.getElementyId('IDtema').value.toLowerCase();
+    const tema = document.getElementById('IDtema').value.toLowerCase();
     const nivel = parseInt(document.getElementById('IDnivel').value);
     const textoPregunta = document.getElementById('IDtextopregunta').value;
     const respuestaCorrecta = document.getElementById('IDrespcorrecta').value.trim();
