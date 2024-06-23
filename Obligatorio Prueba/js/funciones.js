@@ -506,7 +506,6 @@ function terminarJuegoSiEstaEnCurso() {
         terminarJuego();
     }
 }
-
 function agregarTemas(event) {
     event.preventDefault(); // Evita que se recargue la página al enviar el formulario
 
@@ -518,11 +517,9 @@ function agregarTemas(event) {
     const nuevoTema = new Tema(nombre, descripcion);
 
     // Verificación de la existencia del tema en el sistema
-    if (sistema.estaTema(nuevoTema)) {
+    if (!sistema.agregarTema(nuevoTema)) {
         alert('El tema ya existe.');
     } else {
-        sistema.agregarTema(nuevoTema);
-
         // Actualizar la lista de temas registrados
         temasRegistrados.push(nombre);
 
@@ -543,6 +540,7 @@ function agregarTemas(event) {
     // Limpia los campos del formulario
     document.getElementById('formAltaTemas').reset();
 }
+
 
 
 function actualizarTemasSinPreguntas() {
@@ -573,7 +571,7 @@ function actualizarTemasSinPreguntas() {
 function agregarPreguntas(event) {
     event.preventDefault();
 
-    const tema = document.getElementById('IDtema').value.toLowerCase();
+    const tema = document.getElementyId('IDtema').value.toLowerCase();
     const nivel = parseInt(document.getElementById('IDnivel').value);
     const textoPregunta = document.getElementById('IDtextopregunta').value;
     const respuestaCorrecta = document.getElementById('IDrespcorrecta').value.trim();
@@ -586,10 +584,9 @@ function agregarPreguntas(event) {
 
     const nuevaPregunta = new Pregunta(textoPregunta, respuestaCorrecta, respuestasIncorrectas, nivel, { nombre: tema });
 
-    if (sistema.estaPregunta(nuevaPregunta)) {
+    if (!sistema.agregarPregunta(nuevaPregunta)) {
         alert("Esta pregunta ya existe.");
     } else {
-        sistema.agregarPregunta(nuevaPregunta);
         preguntas.push(nuevaPregunta);
 
         agregarFilaPregunta(nuevaPregunta);

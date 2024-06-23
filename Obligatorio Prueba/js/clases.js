@@ -22,24 +22,26 @@ class Sistema {
     }
 
     agregarTema(unTema) {
-        this.listaTemas.push(unTema);
+        if (!this.estaTema(unTema)) {
+            this.listaTemas.push(unTema);
+            return true;
+        }
+        return false;
     }
 
     estaTema(tema) {
-        return this.listaTemas.some(t => t.nombre === tema.nombre);
+        return this.listaTemas.some(t => t.nombre.toLowerCase() === tema.nombre.toLowerCase());
     }
-    
 
     agregarPregunta(unaPregunta) {
-        this.listaPreguntas.push(unaPregunta);
+        if (!this.estaPregunta(unaPregunta)) {
+            this.listaPreguntas.push(unaPregunta);
+            return true;
+        }
+        return false;
     }
 
     estaPregunta(pregunta) {
-        for (let i = 0; i < this.listaPreguntas.length; i++) {
-            if (this.listaPreguntas[i].texto === pregunta.texto) {
-                return true;
-            }
-        }
-        return false;
+        return this.listaPreguntas.some(p => p.texto.toLowerCase() === pregunta.texto.toLowerCase());
     }
 }
