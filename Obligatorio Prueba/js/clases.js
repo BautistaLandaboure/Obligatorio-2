@@ -1,3 +1,5 @@
+// creado por Bautista Landaboure (316326)
+
 class Tema {
     constructor(nombre, descripcion) {
         this.nombre = nombre;
@@ -21,6 +23,15 @@ class Sistema {
         this.listaTemas = [];
     }
 
+    estaTema(tema) {
+        for (let i = 0; i < this.listaTemas.length; i++) {
+            if (this.listaTemas[i].nombre.toLowerCase() === tema.nombre.toLowerCase()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     agregarTema(unTema) {
         if (!this.estaTema(unTema)) {
             this.listaTemas.push(unTema);
@@ -29,8 +40,13 @@ class Sistema {
         return false;
     }
 
-    estaTema(tema) {
-        return this.listaTemas.some(t => t.nombre.toLowerCase() === tema.nombre.toLowerCase());
+    estaPregunta(pregunta) {
+        for (let i = 0; i < this.listaPreguntas.length; i++) {
+            if (this.listaPreguntas[i].texto.toLowerCase() === pregunta.texto.toLowerCase()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     agregarPregunta(unaPregunta) {
@@ -41,7 +57,5 @@ class Sistema {
         return false;
     }
 
-    estaPregunta(pregunta) {
-        return this.listaPreguntas.some(p => p.texto.toLowerCase() === pregunta.texto.toLowerCase());
-    }
 }
+

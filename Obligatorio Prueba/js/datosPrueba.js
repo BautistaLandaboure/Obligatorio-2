@@ -1,6 +1,9 @@
+// Bautista Landaboure (316326)
+
 // DATOS DE PRUEBA
 
 // Preguntas
+
 let preguntas = [
     {
         texto: "¿Cuál es la capital de Francia?",

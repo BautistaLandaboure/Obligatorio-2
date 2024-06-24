@@ -1,4 +1,5 @@
 /* Creado por Bautista Landaboure (316326) */
+
 header {
     background-color: salmon;
     text-align: center;
@@ -37,14 +38,14 @@ nav li {
 
 .partejugar {
     background-color: pink;
-    padding: 20px; /* Ajusta el padding según tu diseño */
-    margin: 0; /* Asegúrate de que no haya margen */
+    padding: 20px; 
+    margin: 0;
 }
 
 #partejugarnomostrar {
     background-color: pink;
-    padding: 20px; /* Ajusta el padding según tu diseño */
-    margin: 0; /* Asegúrate de que no haya margen */
+    padding: 20px; 
+    margin: 0; 
 }
 
 .respuestas {
@@ -104,26 +105,26 @@ nav li {
 .table-container {
     margin-top: 20px;
     margin-bottom: 20px;
-    max-height: 300px; /* Ajuste para mostrar alrededor de 6 preguntas */
+    max-height: 300px;
     overflow-y: auto;
-    border: 1px solid #ccc; /* Agrega un borde para diferenciar el área de la tabla */
+    border: 1px solid #ccc; 
 }
 
 .table-container table {
-    width: 100%; /* Asegura que la tabla ocupe todo el ancho del contenedor */
+    width: 100%;
     border-collapse: collapse;
 }
 
 .table-container th, .table-container td {
-    border: 1px solid #ddd; /* Añade bordes a las celdas para mejor visualización */
-    padding: 8px; /* Espaciado dentro de las celdas */
-    text-align: left; /* Alineación del texto en las celdas */
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left; 
 }
 
 .table-container th {
-    background-color: #f2f2f2; /* Fondo para los encabezados */
-    position: sticky; /* Mantiene los encabezados visibles al hacer scroll */
-    top: 0; /* Necesario para el sticky */
+    background-color: #f2f2f2; 
+    position: sticky; 
+    top: 0; 
 }
 
 h3 {
